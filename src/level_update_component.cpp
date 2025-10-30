@@ -1,6 +1,6 @@
 #include "level_update_component.hpp"
 #include "sound_engine.hpp"
-// #include "player_update_component.hpp"
+#include "player_update_component.hpp"
 
 #include <random>
 
@@ -53,7 +53,7 @@ void LevelUpdateComponent::update(float time_since_last_update)
         if (time_since_last_platform_ > platform_creation_interval_) {
             platform_positions_[next_platform_to_move_]->top =
                 platform_positions_[move_relative_to_platform_]->top + getRandomNumber(-40, 40);
-            if (platform_positions_[move_relative_to_platform_].top <
+            if (platform_positions_[move_relative_to_platform_]->top <
                 platform_positions_[next_platform_to_move_]->top) {
                     platform_positions_[next_platform_to_move_]->left = 
                         platform_positions_[move_relative_to_platform_]->left +
@@ -65,7 +65,28 @@ void LevelUpdateComponent::update(float time_since_last_update)
                     platform_positions_[move_relative_to_platform_]->width +
                     getRandomNumber(0, 20);
             }
-            
+            platform_positions_[next_platform_to_move_]->width = getRandomNumber(20, 200);
+            platform_positions_[next_platform_to_move_]->height = getRandomNumber(10, 20);
+            platform_creation_interval_ = platform_positions_[next_platform_to_move_]->width / 90;
+            move_relative_to_platform_ = next_platform_to_move_;
+            ++next_platform_to_move_;
+            if (next_platform_to_move_ == number_of_platforms_) {
+                next_platform_to_move_ = 0;
+            }
+            time_since_last_platform_ = 0;
+        }
+
+        bool lagging_behind = true;
+        for (const auto& platform_position : platform_positions_) {
+            if (platform_position->left < player_position_->left) {
+                lagging_behind = false;
+                break;
+            }
+        }
+        if (lagging_behind) {
+            is_paused_ = true;
+            is_game_over_ = true;
+            SoundEngine::getInstance().pauseMusic();
         }
     }
 }
@@ -73,7 +94,7 @@ void LevelUpdateComponent::update(float time_since_last_update)
 void LevelUpdateComponent::assemble(std::shared_ptr<LevelUpdateComponent> level_update_component,
                                     std::shared_ptr<PlayerUpdateComponent> player_update_component)
 {
-    player_position_ = player_update_component->getPosistionPointer();
+    player_position_ = player_update_component->getPositionPointer();
     SoundEngine::getInstance().startMusic();
 }
 
