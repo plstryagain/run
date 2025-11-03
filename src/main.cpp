@@ -29,6 +29,7 @@ int main()
         for (auto& game_object : game_objects) {
             game_object.draw(canvas);
         }
+        window.draw(canvas, factory.texture_);
         window.display();
     }
 
