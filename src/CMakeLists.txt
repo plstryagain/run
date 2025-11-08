@@ -10,6 +10,8 @@ set(SOURCES main.cpp
             level_update_component.cpp
             player_update_component.cpp
             player_graphics_component.cpp
+            camera_update_component.cpp
+            camera_graphics_component.cpp
 )
 
 add_library(main_obj OBJECT ${SOURCES})
