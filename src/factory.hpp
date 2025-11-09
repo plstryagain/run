@@ -24,7 +24,7 @@ private:
     inline static constexpr int32_t PLAYER_TEX_TOP = 0;
     inline static constexpr int32_t PLAYER_TEX_WIDTH = 80;
     inline static constexpr int32_t PLAYER_TEX_HEIGHT = 96;
-    inline static constexpr float CAM_VIEW_WITH = 300.f;
+    inline static constexpr float CAM_VIEW_WIDTH = 300.f;
     inline static constexpr float CAM_SCREEN_RATIO_LEFT = 0.f;
     inline static constexpr float CAM_SCREEN_RATIO_TOP = 0.f;
     inline static constexpr float CAM_SCREEN_RATIO_WIDTH = 1.f;

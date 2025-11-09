@@ -7,7 +7,7 @@
 
 #include <memory>
 
-class CameraUpdateComponent : UpdateComponent
+class CameraUpdateComponent : public UpdateComponent
 {
 public:
     CameraUpdateComponent();

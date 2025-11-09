@@ -3,6 +3,8 @@
 #include "player_graphics_component.hpp"
 #include "player_update_component.hpp"
 #include "input_dispatcher.hpp"
+#include "camera_update_component.hpp"
+#include "camera_graphics_component.hpp"
 
 #include <iostream>
 #include <memory>
@@ -43,4 +45,43 @@ void Factory::loadLevel(std::vector<GameObject>& game_objects, sf::VertexArray& 
     game_objects.push_back(player);
 
     level_update_component->assemble(nullptr, player_update_component);
+
+    const float width = static_cast<float>(sf::VideoMode::getDesktopMode().width);
+    const float height = static_cast<float>(sf::VideoMode::getDesktopMode().height);
+    const float ratio = width / height;
+
+    GameObject camera;
+    std::shared_ptr<CameraUpdateComponent> camera_update_component = 
+        std::make_shared<CameraUpdateComponent>();
+    camera_update_component->assemble(nullptr, player_update_component);
+    camera.addComponent(camera_update_component);
+    std::shared_ptr<CameraGraphicsComponent> camera_graphics_component = 
+        std::make_shared<CameraGraphicsComponent>(window_, texture_,
+                                                    sf::Vector2f{CAM_VIEW_WIDTH, CAM_VIEW_WIDTH / ratio},
+                                                sf::FloatRect{CAM_SCREEN_RATIO_LEFT, CAM_SCREEN_RATIO_TOP,
+                                                CAM_SCREEN_RATIO_WIDTH, CAM_SCREEN_RATIO_HEIGHT});
+    camera_graphics_component->assemble(canvas, camera_update_component, 
+                                       sf::IntRect{CAM_TEX_LEFT, CAM_TEX_TOP, CAM_TEX_WIDTH, CAM_TEX_HEIGHT});
+    camera.addComponent(camera_graphics_component);
+    game_objects.push_back(camera);
+    level_update_component->connectToCameraTime(camera_graphics_component->getTimeConnection());
+
+    GameObject map_camera;
+    std::shared_ptr<CameraUpdateComponent> map_camera_update_component = 
+        std::make_shared<CameraUpdateComponent>();
+    map_camera_update_component->assemble(nullptr, player_update_component);
+    map_camera.addComponent(map_camera_update_component);
+
+    input_dispatcher.registerNewInputReceiver(map_camera_update_component->getInputReceiver());
+
+    std::shared_ptr<CameraGraphicsComponent> map_camera_graphics_component = 
+        std::make_shared<CameraGraphicsComponent>(
+            window_, texture_, sf::Vector2f{MAP_CAM_VIEW_WIDTH, MAP_CAM_VIEW_HEIGHT / ratio},
+            sf::FloatRect{MAP_CAM_SCREEN_RATIO_LEFT, MAP_CAM_SCREEN_RATIO_TOP,
+            MAP_CAM_SCREEN_RATIO_WIDTH, MAP_CAM_SCREEN_RATIO_HEIGHT}
+        );
+    map_camera_graphics_component->assemble(canvas, map_camera_update_component, 
+        sf::IntRect{MAP_CAM_TEX_LEFT, MAP_CAM_TEX_TOP, MAP_CAM_TEX_WIDTH, MAP_CAM_TEX_HEIGHT});
+    map_camera.addComponent(map_camera_graphics_component);
+    game_objects.push_back(map_camera);
 }

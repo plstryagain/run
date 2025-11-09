@@ -12,7 +12,7 @@ CameraGraphicsComponent::CameraGraphicsComponent(sf::RenderWindow* window, sf::T
     if (view_port.width < 1) {
         is_mini_map_ = true;
     } else {
-        font_.loadFromFile("assets/font/KOMIKAP_.ttf");
+        font_.loadFromFile("assets/fonts/KOMIKAP_.ttf");
         text_.setFont(font_);
         text_.setFillColor(sf::Color{255, 0, 0, 255});
         text_.setScale(0.2f, 0.2f);
@@ -74,4 +74,11 @@ void CameraGraphicsComponent::draw(sf::VertexArray& canvas)
             view_.zoom(position_->width);
         }
     }
+    window_->setView(view_);
+    if (!is_mini_map_) {
+        text_.setString(std::to_string(time_));
+        text_.setPosition(window_->mapPixelToCoords(sf::Vector2i{5, 5}));
+        window_->draw(text_);
+    }
+    window_->draw(canvas, texture_);
 }
