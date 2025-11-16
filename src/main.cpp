@@ -7,7 +7,8 @@
 
 int main()
 {
-    sf::RenderWindow window{sf::VideoMode::getDesktopMode(), "Booster", sf::Style::Fullscreen};
+    // sf::RenderWindow window{sf::VideoMode::getDesktopMode(), "Booster", sf::Style::Fullscreen};
+    sf::RenderWindow window{sf::VideoMode::getDesktopMode(), "Booster", sf::Style::Default};
     sf::VertexArray canvas{sf::Quads, 0};
 
     InputDispatcher input_dispatcher{&window};

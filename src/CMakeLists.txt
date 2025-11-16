@@ -12,6 +12,8 @@ set(SOURCES main.cpp
             player_graphics_component.cpp
             camera_update_component.cpp
             camera_graphics_component.cpp
+            platform_update_component.cpp
+            platform_graphics_component.cpp
 )
 
 add_library(main_obj OBJECT ${SOURCES})

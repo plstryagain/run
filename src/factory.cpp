@@ -5,6 +5,8 @@
 #include "input_dispatcher.hpp"
 #include "camera_update_component.hpp"
 #include "camera_graphics_component.hpp"
+#include "platform_update_component.hpp"
+#include "platform_graphics_component.hpp"
 
 #include <iostream>
 #include <memory>
@@ -45,6 +47,24 @@ void Factory::loadLevel(std::vector<GameObject>& game_objects, sf::VertexArray& 
     game_objects.push_back(player);
 
     level_update_component->assemble(nullptr, player_update_component);
+
+    for (int32_t i = 0; i < 8; ++i) {
+        GameObject platform;
+        std::shared_ptr<PlatformUpdateComponent> platform_update_component = 
+            std::make_shared<PlatformUpdateComponent>();
+        platform_update_component->assemble(nullptr, player_update_component);
+        platform.addComponent(platform_update_component);
+
+        std::shared_ptr<PlatformGraphicsComponent> platform_graphics_component = 
+            std::make_shared<PlatformGraphicsComponent>();
+        platform_graphics_component->assemble(canvas, platform_update_component, 
+            sf::IntRect{PLATFORM_TEX_LEFT, PLATFORM_TEX_TOP, 
+                                    PLATFORM_TEX_WIDTH, PLATFORM_TEX_HEIGHT});
+        platform.addComponent(platform_graphics_component);
+        game_objects.push_back(platform);
+
+        level_update_component->addPlatformPosition(platform_update_component->getPositionPointer());
+    }
 
     const float width = static_cast<float>(sf::VideoMode::getDesktopMode().width);
     const float height = static_cast<float>(sf::VideoMode::getDesktopMode().height);
