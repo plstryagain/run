@@ -21,7 +21,7 @@ public:
 private:
     void positionLevelAtStart();
 private:
-    bool is_paused_ = true;
+    bool is_paused_ = false;
     std::vector<sf::FloatRect*> platform_positions_;
     float* camera_time_ = nullptr;
     sf::FloatRect* player_position_ = nullptr;

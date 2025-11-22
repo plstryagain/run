@@ -4,7 +4,7 @@
 
 #include <memory>
 
-// class Animator;
+class Animator;
 
 class PlayerUpdateComponent;
 
@@ -25,11 +25,11 @@ public:
 private:
     sf::FloatRect* position_ = nullptr;
     int32_t vertex_start_index_ = -999;
-    // Animator* animator_;
+    Animator* animator_;
     sf::IntRect* section_to_draw_;
     sf::IntRect* standing_still_section_to_draw_;
     std::shared_ptr<PlayerUpdateComponent> player_update_;
-    inline static constexpr int32_t BOOST_TEX_LEF = 536;
+    inline static constexpr int32_t BOOST_TEX_LEFT = 536;
     inline static constexpr int32_t BOOST_TEX_TOP = 0;
     inline static constexpr int32_t BOOST_TEX_WIDTH = 69;
     inline static constexpr int32_t BOOST_TEX_HEIGHT = 100;

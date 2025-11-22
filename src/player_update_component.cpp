@@ -67,12 +67,12 @@ void PlayerUpdateComponent::assemble(std::shared_ptr<LevelUpdateComponent> level
 {
     position_.width = PLAYER_WIDTH;
     position_.height = PLAYER_HEIGHT;
-    is_paused = level_update->getIsPausedPointer();
+    is_paused_ = level_update->getIsPausedPointer();
 }
 
 void PlayerUpdateComponent::update([[maybe_unused]] float elapsed_time)
 {
-    if (!(*is_paused)) {
+    if (!(*is_paused_)) {
         position_.top += gravity_ * elapsed_time;
         handleInput();
 

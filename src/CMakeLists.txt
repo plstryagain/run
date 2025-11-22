@@ -14,6 +14,7 @@ set(SOURCES main.cpp
             camera_graphics_component.cpp
             platform_update_component.cpp
             platform_graphics_component.cpp
+            animator.cpp
 )
 
 add_library(main_obj OBJECT ${SOURCES})
