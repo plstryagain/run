@@ -11,7 +11,7 @@ PlayerGraphicsComponent::PlayerGraphicsComponent()
 
 PlayerGraphicsComponent::~PlayerGraphicsComponent()
 {
-
+    delete animator_;
 }
 
 void PlayerGraphicsComponent::assemble(sf::VertexArray& canvas,

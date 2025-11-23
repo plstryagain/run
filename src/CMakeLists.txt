@@ -15,6 +15,7 @@ set(SOURCES main.cpp
             platform_update_component.cpp
             platform_graphics_component.cpp
             animator.cpp
+            menu_update_component.cpp
 )
 
 add_library(main_obj OBJECT ${SOURCES})
