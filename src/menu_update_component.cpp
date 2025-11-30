@@ -63,7 +63,20 @@ InputReceiver* MenuUpdateComponent::getInputReceiver()
 
 void MenuUpdateComponent::update(float elapsed_time)
 {
+    handleInput();
 
+    if (*is_paused_ && !is_visible_) {
+        is_visible_ = true;
+        is_game_over_ = true;
+    }
+
+    if (is_visible_) {
+        position_.left = player_position->getPosition().x - position_.width / 2;
+        position_.top = player_position->getPosition().y - position_.height / 2;
+    } else {
+        position_.left = -999;
+        position_.top = -999;
+    }
 }
 
 void MenuUpdateComponent::assemble(std::shared_ptr<LevelUpdateComponent> level_update_component,
