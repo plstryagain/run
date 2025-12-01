@@ -9,6 +9,7 @@
 #include "platform_graphics_component.hpp"
 #include "menu_update_component.hpp"
 #include "menu_graphics_component.hpp"
+#include "rain_graphics_component.hpp"
 
 #include <iostream>
 #include <memory>
@@ -66,6 +67,21 @@ void Factory::loadLevel(std::vector<GameObject>& game_objects, sf::VertexArray& 
         game_objects.push_back(platform);
 
         level_update_component->addPlatformPosition(platform_update_component->getPositionPointer());
+    }
+
+    int32_t rain_coverage_per_object = 25;
+    int32_t area_to_cover = 350;
+
+    for (int32_t h = -area_to_cover / 2; h < area_to_cover / 2; h+= rain_coverage_per_object) {
+        for (int32_t v = -area_to_cover / 2; v < area_to_cover / 2; v += rain_coverage_per_object) {
+            GameObject rain;
+            std::shared_ptr<RainGraphicsComponent> rain_graphics_component = 
+                std::make_shared<RainGraphicsComponent>(player_update_component->getPositionPointer(), h, v, rain_coverage_per_object);
+            rain_graphics_component->assemble(canvas, nullptr, 
+                sf::IntRect{RAIN_TEX_LEFT, RAIN_TEX_TOP, RAIN_TEX_WIDTH, RAIN_TEX_HEIGHT});
+            rain.addComponent(rain_graphics_component);
+            game_objects.push_back(rain);
+        }
     }
 
     const float width = static_cast<float>(sf::VideoMode::getDesktopMode().width);
