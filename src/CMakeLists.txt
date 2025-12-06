@@ -18,6 +18,8 @@ set(SOURCES main.cpp
             menu_update_component.cpp
             menu_graphics_component.cpp
             rain_graphics_component.cpp
+            fireball_update_component.cpp
+            fireball_graphics_component.cpp
 )
 
 add_library(main_obj OBJECT ${SOURCES})

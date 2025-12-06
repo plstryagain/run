@@ -25,6 +25,7 @@ public:
     void stopMusic();
     void playClick();
     void playJump();
+    void playFireballLaunch(sf::Vector2f player_position, sf::Vector2f sound_location);
 
 private:
     bool is_music_playing_;
@@ -33,4 +34,6 @@ private:
     sf::Sound click_sound_;
     sf::SoundBuffer jump_sound_buffer_;
     sf::Sound jump_sound_;
+    sf::SoundBuffer fireball_launch_buffer_;
+    sf::Sound fireball_launch_sound_;
 };

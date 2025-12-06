@@ -10,6 +10,8 @@
 #include "menu_update_component.hpp"
 #include "menu_graphics_component.hpp"
 #include "rain_graphics_component.hpp"
+#include "fireball_graphics_component.hpp"
+#include "fireball_update_component.hpp"
 
 #include <iostream>
 #include <memory>
@@ -67,6 +69,19 @@ void Factory::loadLevel(std::vector<GameObject>& game_objects, sf::VertexArray& 
         game_objects.push_back(platform);
 
         level_update_component->addPlatformPosition(platform_update_component->getPositionPointer());
+    }
+
+    for (int32_t i = 0; i < 12; ++i) {
+        GameObject fireball;
+        auto fireball_update_component = std::make_shared<FireballUpdateComponent>(level_update_component->getIsPausedPointer());
+        fireball_update_component->assemble(level_update_component, player_update_component);
+        fireball.addComponent(fireball_update_component);
+
+        auto fireball_graphics_component = std::make_shared<FireballGraphicsComponent>();
+        fireball_graphics_component->assemble(canvas, fireball_update_component, 
+            sf::IntRect{870, 0, 32, 32});
+        fireball.addComponent(fireball_graphics_component);
+        game_objects.push_back(fireball);
     }
 
     int32_t rain_coverage_per_object = 25;
