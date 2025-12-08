@@ -1,6 +1,7 @@
 #include "camera_graphics_component.hpp"
 #include "camera_update_component.hpp"
 
+#include <iostream>
 
 CameraGraphicsComponent::CameraGraphicsComponent(sf::RenderWindow* window, sf::Texture* texture,
     sf::Vector2f view_size, sf::FloatRect view_port)
@@ -17,6 +18,18 @@ CameraGraphicsComponent::CameraGraphicsComponent(sf::RenderWindow* window, sf::T
         text_.setFillColor(sf::Color{255, 0, 0, 255});
         text_.setScale(0.2f, 0.2f);
     }
+    background_texture_.loadFromFile("assets/graphics/backgroundTexture.png");
+    background_sprite_.setTexture(background_texture_);
+    background_sprite2_.setTexture(background_texture_);
+
+    background_sprite_.setPosition(0, -200);
+
+    shader_.loadFromFile("assets/shaders/glslsandbox109644", sf::Shader::Fragment);
+    if (!shader_.isAvailable()) {
+        std::cout << "The shader is not available" <<std::endl;
+    }
+    shader_.setUniform("resolution", sf::Vector2f(2500, 2500));
+    shader_clock_.restart();
 }
 
 CameraGraphicsComponent::~CameraGraphicsComponent()
@@ -75,6 +88,53 @@ void CameraGraphicsComponent::draw(sf::VertexArray& canvas)
         }
     }
     window_->setView(view_);
+    sf::Vector2f movement;
+    movement.x = position_->left - players_previous_position_.x;
+    movement.y = position_->top - players_previous_position_.y;
+    if (is_background_are_flipped_) {
+        background_sprite2_.setPosition(
+            background_sprite2_.getPosition().x + movement.x / 6,
+            background_sprite2_.getPosition().y + movement.y / 6
+        );
+        background_sprite_.setPosition(
+            background_sprite2_.getPosition().x + background_sprite2_.getTextureRect().getSize().x,
+            background_sprite2_.getPosition().y);
+        if (position_->left > 
+            background_sprite_.getPosition().x + (background_sprite_.getTextureRect().getSize().x / 2)) {
+            is_background_are_flipped_ = !is_background_are_flipped_;
+            background_sprite2_.setPosition(background_sprite_.getPosition());
+        }
+    } else {
+        background_sprite_.setPosition(
+            background_sprite_.getPosition().x - movement.x / 6,
+            background_sprite_.getPosition().y + movement.y / 6);
+        background_sprite2_.setPosition(
+            background_sprite_.getPosition().x + background_sprite_.getTextureRect().getSize().x,
+            background_sprite_.getPosition().y);
+        if (position_->left >
+            background_sprite2_.getPosition().x + (background_sprite2_.getTextureRect().getSize().x / 2)) {
+            is_background_are_flipped_ = !is_background_are_flipped_;
+            background_sprite_.setPosition(
+                background_sprite2_.getPosition());
+        }
+    }
+    players_previous_position_.x = position_->left;
+    players_previous_position_.y = position_->top;
+
+    shader_.setUniform("time", shader_clock_.getElapsedTime().asSeconds());
+    sf::Vector2i mouse_pos = window_->mapCoordsToPixel(position_->getPosition());
+    shader_.setUniform("mouse", sf::Vector2f{static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y + 1000)});
+    if (shader_clock_.getElapsedTime().asSeconds() > 10) {
+        shader_clock_.restart();
+        is_show_shader_ = !is_show_shader_;
+    }
+    // if (!is_show_shader_) {
+    //     window_->draw(background_sprite_, &shader_);
+    //     window_->draw(background_sprite2_, &shader_);
+    // } else {
+        window_->draw(background_sprite_);
+        window_->draw(background_sprite2_);
+    // }
     if (!is_mini_map_) {
         text_.setString(std::to_string(time_));
         text_.setPosition(window_->mapPixelToCoords(sf::Vector2i{5, 5}));

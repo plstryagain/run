@@ -39,7 +39,7 @@ private:
     inline static constexpr float PLAYER_HEIGHT = 16.f;
     sf::FloatRect position_;
     bool* is_paused_ = nullptr;
-    float gravity_ = 125;
+    float gravity_ = 100;
     float run_speed_ = 150;
     float boost_speed_ = 250;
     InputReceiver input_receiver_;

@@ -33,4 +33,12 @@ private:
     sf::Font font_;
     int32_t time_at_end_of_game_ = 0;
     float time_ = 0;
+    sf::Shader shader_;
+    bool is_show_shader_ = false;
+    bool is_background_are_flipped_ = false;
+    sf::Clock shader_clock_;
+    sf::Vector2f players_previous_position_;
+    sf::Texture background_texture_;
+    sf::Sprite background_sprite_;
+    sf::Sprite background_sprite2_;
 };
